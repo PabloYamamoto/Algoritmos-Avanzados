@@ -12,23 +12,6 @@ For example:
 
 -------- INPUT -------
 
-Enter the number of events you wish to create: 8
-Enter the starting time and the finishing time separated by a space for the 0 task: 0 6
-
-Enter the starting time and the finishing time separated by a space for the 1 task: 1 4
-
-Enter the starting time and the finishing time separated by a space for the 2 task: 3 5
-
-Enter the starting time and the finishing time separated by a space for the 3 task: 3 8
-
-Enter the starting time and the finishing time separated by a space for the 4 task: 4 7
-
-Enter the starting time and the finishing time separated by a space for the 5 task: 5 9
-
-Enter the starting time and the finishing time separated by a space for the 6 task: 6 10
-
-Enter the starting time and the finishing time separated by a space for the 7 task: 8 11
-
 
 -------- OUTPUT -------
 
@@ -38,82 +21,80 @@ Task: 7
 
 */
 
-
-
 #include <iostream>
+#include <algorithm>
 #include <vector>
-using namespace std; 
+using namespace std;
 
 struct Task
 {
-    int time_start, time_end; 
-    int n; // number of events - index of the vector
+    int n, time_start, time_end;
+    // n = index of the vector
+
+    Task(int n_, int time_start_, int time_end_)
+    {
+        n = n_;
+        time_start = time_start_;
+        time_end = time_end_;
+    }
 };
-
-
 
 bool comparationSP(Task a, Task b)
 {
-    return a.time_end < b.time_end; 
+    return a.time_end < b.time_end;
 }
-
 
 vector<Task> earliestFinishTimeFirst(vector<Task> &calendar)
 {
     // we sort using the function os compartionSP, this will sort by earliest start time
     sort(calendar.begin(), calendar.end(), comparationSP);
-    
-    vector<Task> s; 
+
+    vector<Task> s;
 
     // We always take the first task or activity in the s vector
-    s.push_back(calendar.at(0));  // Vector that contains max number of taks that someone can do
+    s.push_back(calendar.at(0)); // Vector that contains max number of taks that someone can do
 
-    for(int j = 1; j < calendar.size(); j++){
-
+    for (int j = 1; j < calendar.size(); j++)
+    {
         // If the substraction from the task at vector s with the task at the calendar,
-        // postion j, is less than or equal than 0, it means both tasks are compatible, 
+        // postion j, is less than or equal than 0, it means both tasks are compatible,
         // so we add them to the vector s
-        if(s.back().time_end - calendar.at(j).time_start <= 0)
+        if (s.back().time_end - calendar.at(j).time_start <= 0)
         {
-            s.push_back(calendar.at(j)); 
-        }   
+            s.push_back(calendar.at(j));
+        }
     }
-    return s; 
+    return s;
 }
 
-
-int main()
+int main(int argc, char *argv[])
 {
     // We ask for n -> number of events
-    int n; 
-    cout << "Enter the number of events you wish to create: "; 
-    cin >> n; 
+    int n = stoi(argv[1]);
 
-    // Create the vector 
-    vector<Task> calendar; 
-    // We ask the startig and finishing times for each task 
-    for(int i = 0; i < n; i++)
-    {
-        // Create a temporal structure containing starting and finishing time 
-        struct Task temp_task;
-        temp_task.n = i;  
-        cout << "Enter the starting time and the finishing time separated by a space for the " << i << " task: "; 
-        cin >> temp_task.time_start >> temp_task.time_end; 
-        cout << endl; 
-        calendar.push_back(temp_task); 
-    }
-    
-    // Call the function and filling in the vector 
+    vector<Task> calendar;
 
-    vector<Task> s (earliestFinishTimeFirst(calendar));
-    
-    // Printing the indexes of each task 
-    
-    for(int i = 0; i < s.size(); i++)
+    // Create the vector
+    // We ask the startig and finishing times for each task
+    for (int i = 0; i < n; i++)
     {
-        cout << "Task: " << s.at(i).n << endl; 
+        // cout << " n: " << n;
+        // cout << " start: " << stoi(argv[i + 2]);
+        // cout << " end: " << stoi(argv[i + 2 + n]) << endl;
+
+        calendar.push_back( Task(i, stoi(argv[i + 2]), stoi(argv[i + 2 + n])) );
     }
 
-    return 0; 
+    // Call the function and filling in the vector
+
+    vector<Task> s(earliestFinishTimeFirst(calendar));
+
+    // Printing the indexes of each task
+
+    for (int i = 0; i < s.size(); i++)
+    {
+        cout << s.at(i).n << " ";
+    }
+
+    return 0;
 }
-
