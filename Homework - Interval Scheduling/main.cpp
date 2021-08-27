@@ -1,4 +1,5 @@
 /*
+Homework 01 - Earliest-finish-time-first algorithm for Interval Scheduling
 
 Santiago Kohn Espinosa - A01029109
 Pablo Yamamoto Magaña - A01022382
@@ -71,10 +72,10 @@ int main(int argc, char *argv[])
     // We ask for n -> number of events
     int n = stoi(argv[1]);
 
+    // Create the vector
     vector<Task> calendar;
 
-    // Create the vector
-    // We ask the startig and finishing times for each task
+    // Use the input to make the objects and push back to the vector.
     for (int i = 0; i < n; i++)
     {
         // cout << " n: " << n;
@@ -85,11 +86,9 @@ int main(int argc, char *argv[])
     }
 
     // Call the function and filling in the vector
-
     vector<Task> s(earliestFinishTimeFirst(calendar));
 
     // Printing the indexes of each task
-
     for (int i = 0; i < s.size(); i++)
     {
         cout << s.at(i).n << " ";
