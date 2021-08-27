@@ -28,26 +28,31 @@ using namespace std;
 
 struct Task
 {
-    int n, time_start, time_end;
+    int n, timeStart, timeEnd;
     // n = index of the vector
 
-    Task(int n_, int time_start_, int time_end_)
+    Task(int n_, int timeStart_, int timeEnd_)
     {
         n = n_;
-        time_start = time_start_;
-        time_end = time_end_;
+        timeStart = timeStart_;
+        timeEnd = timeEnd_;
     }
 };
 
-bool comparationSP(Task a, Task b)
+bool compTimeEnd(Task a, Task b)
 {
-    return a.time_end < b.time_end;
+    return a.timeEnd < b.timeEnd;
+}
+
+bool compIndex(Task a, Task b)
+{
+    return a.n < b.n;
 }
 
 vector<Task> earliestFinishTimeFirst(vector<Task> &calendar)
 {
     // we sort using the function os compartionSP, this will sort by earliest start time
-    sort(calendar.begin(), calendar.end(), comparationSP);
+    sort(calendar.begin(), calendar.end(), compTimeEnd);
 
     vector<Task> s;
 
@@ -59,7 +64,7 @@ vector<Task> earliestFinishTimeFirst(vector<Task> &calendar)
         // If the substraction from the task at vector s with the task at the calendar,
         // postion j, is less than or equal than 0, it means both tasks are compatible,
         // so we add them to the vector s
-        if (s.back().time_end - calendar.at(j).time_start <= 0)
+        if (s.back().timeEnd - calendar.at(j).timeStart <= 0)
         {
             s.push_back(calendar.at(j));
         }
@@ -88,6 +93,9 @@ int main(int argc, char *argv[])
     // Call the function and filling in the vector
     vector<Task> s(earliestFinishTimeFirst(calendar));
 
+    // Sort the result by the index.
+    sort(s.begin(), s.end(), compIndex);
+    
     // Printing the indexes of each task
     for (int i = 0; i < s.size(); i++)
     {
