@@ -12,12 +12,11 @@ For example:
 
 -------- INPUT -------
 
+./a.out 8 0 1 3 3 4 5 6 8 6 4 5 8 7 9 10 11
 
 -------- OUTPUT -------
 
-Task: 1
-Task: 4
-Task: 7
+1 4 7
 
 */
 
@@ -95,6 +94,7 @@ int main(int argc, char *argv[])
     {
         cout << s.at(i).n << " ";
     }
+    cout << endl;
 
     return 0;
 }
