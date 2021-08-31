@@ -56,11 +56,15 @@ int binarySearch(int j, vector<Task> &calendar, int start = 0, int end = -1)
 
 int mComputeOPT(int j, vector<int> &M, vector<Task> &calendar, vector<int> &p)
 {
+    if (j == -1){
+        return 0;
+    }
+
     if (M.at(j) == 0)
     {
-        M.at(j) = max(mComputeOPT(j - 1, M, calendar, p), calendar.at(j-1).weight + mComputeOPT(p.at(j), M, calendar, p));
-        cout << j << " - " << M[j] << endl;
+        M.at(j) = max(mComputeOPT(j - 1, M, calendar, p), calendar.at(j).weight + mComputeOPT(p.at(j), M, calendar, p));
     }
+
     return M.at(j);
 }
 
@@ -68,17 +72,18 @@ int topDown(vector<Task> calendar)
 {
     sort(calendar.begin(), calendar.end(), compTimeEnd);
 
-    vector<int> p(calendar.size() + 1);
-    p.at(0) = 0;
-    for (int i = 1; i <= calendar.size(); i++)
+    vector<int> p(calendar.size());
+
+    for (int i = 0; i < calendar.size(); i++)
     {
-        p.at(i) = binarySearch(i - 1, calendar) + 1;
+        p.at(i) = binarySearch(i, calendar);
     }
-    cout << endl;
-    vector<int> M(calendar.size() + 1, 0);
+
+    vector<int> M(calendar.size(), 0);
+
     M.at(0) = calendar.at(0).weight;
 
-    return mComputeOPT(calendar.size(), M, calendar, p);
+    return mComputeOPT(calendar.size()- 1, M, calendar, p);
 }
 
 int main(int argc, char *argv[])
@@ -90,14 +95,14 @@ int main(int argc, char *argv[])
     vector<Task> calendar;
 
     // Use the input to make the objects and push back to the vector.
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i < n; i++)
     {
-        // cout << " n: " << n;
-        // cout << " start: " << stoi(argv[i + 1]);
-        // cout << " end: " << stoi(argv[i + 1 + n]);
-        // cout << " weight: " << stoi(argv[i + 1 + 2*n]) << endl;
+        // cout << " n: " << i;
+        // cout << " start: " << stoi(argv[i + 2]);
+        // cout << " end: " << stoi(argv[i + 2 + n]);
+        // cout << " weight: " << stoi(argv[i + 2 + 2*n]) << endl;
 
-        calendar.push_back(Task(i, stoi(argv[i + 1]), stoi(argv[i + 1 + n]), stoi(argv[i + 1 + 2 * n])));
+        calendar.push_back(Task(i, stoi(argv[i + 2]), stoi(argv[i + 2 + n]), stoi(argv[i + 2 + 2 * n])));
     }
 
     // Call the function and filling in the vector
