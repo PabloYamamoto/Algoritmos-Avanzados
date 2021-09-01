@@ -56,7 +56,8 @@ int binarySearch(int j, vector<Task> &calendar, int start = 0, int end = -1)
 
 int mComputeOPT(int j, vector<int> &M, vector<Task> &calendar, vector<int> &p)
 {
-    if (j == -1){
+    if (j == -1)
+    {
         return 0;
     }
 
@@ -68,7 +69,27 @@ int mComputeOPT(int j, vector<int> &M, vector<Task> &calendar, vector<int> &p)
     return M.at(j);
 }
 
-int topDown(vector<Task> calendar)
+vector<int> obtainIndex(vector<int> &M, vector<int> &p)
+{
+    int i = M.size() - 1;
+
+    while (M[i] == M[i - 1])
+    {
+        i--;
+    }
+    vector<int> indexes;
+    indexes.push_back(i);
+
+    while (p[i] != -1)
+    {
+        indexes.push_back(p[i]);
+        i = p[i];
+    }
+
+    return indexes;
+}
+
+vector<int> topDown(vector<Task> calendar)
 {
     sort(calendar.begin(), calendar.end(), compTimeEnd);
 
@@ -83,7 +104,9 @@ int topDown(vector<Task> calendar)
 
     M.at(0) = calendar.at(0).weight;
 
-    return mComputeOPT(calendar.size()- 1, M, calendar, p);
+    mComputeOPT(calendar.size() - 1, M, calendar, p);
+
+    return obtainIndex(M, p);
 }
 
 int main(int argc, char *argv[])
@@ -106,14 +129,14 @@ int main(int argc, char *argv[])
     }
 
     // Call the function and filling in the vector
-    //vector<Task> s((calendar));
-    cout << topDown(calendar) << endl;
+    vector<int> s(topDown(calendar));
+
     // Printing the indexes of each task
-    // for (int i = 0; i < s.size(); i++)
-    // {
-    //     cout << s.at(i).n << " ";
-    // }
-    // cout << endl;
+    for (int i = 0; i < s.size(); i++)
+    {
+        cout << s.at(i) << " ";
+    }
+    cout << endl;
 
     return 0;
 }
