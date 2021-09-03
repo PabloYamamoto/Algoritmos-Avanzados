@@ -54,39 +54,31 @@ int binarySearch(int j, vector<Task> &calendar, int start = 0, int end = -1)
     return -1;
 }
 
-int mComputeOPT(int j, vector<int> &M, vector<Task> &calendar, vector<int> &p)
+vector<int> mComputeOPT(int j, vector<vector<int> > &M, vector<Task> &calendar, vector<int> &p)
 {
     if (j == -1)
     {
-        return 0;
+        vector<int> A(1, 0);
+        return A;
     }
 
-    if (M.at(j) == 0)
+    if (M.at(j).at(0) == 0)
     {
-        M.at(j) = max(mComputeOPT(j - 1, M, calendar, p), calendar.at(j).weight + mComputeOPT(p.at(j), M, calendar, p));
+        vector<int> A(mComputeOPT(j - 1, M, calendar, p));
+        vector<int> B(mComputeOPT(p.at(j), M, calendar, p));
+        int w = calendar.at(j).weight;
+        if (w + B.at(0) > A.at(0))
+        {
+            M.at(j) = B;
+            M.at(j).at(0) += w;
+            M.at(j).push_back(calendar.at(j).n);
+        }
+        else{
+            M.at(j) = A;
+        }
     }
 
     return M.at(j);
-}
-
-vector<int> obtainIndex(vector<int> &M, vector<int> &p)
-{
-    int i = M.size() - 1;
-
-    while (M[i] == M[i - 1])
-    {
-        i--;
-    }
-    vector<int> indexes;
-    indexes.push_back(i);
-
-    while (p[i] != -1)
-    {
-        indexes.push_back(p[i]);
-        i = p[i];
-    }
-
-    return indexes;
 }
 
 vector<int> topDown(vector<Task> calendar)
@@ -99,14 +91,19 @@ vector<int> topDown(vector<Task> calendar)
     {
         p.at(i) = binarySearch(i, calendar);
     }
+    
+    for (int i = 0; i < calendar.size(); i++)
+    {
+        cout << p.at(i) << " ";
+    }
+    cout << endl;
+    vector<int> A(1, 0);
+    vector<vector<int> > M(calendar.size(), A);
 
-    vector<int> M(calendar.size(), 0);
+    M.at(0).push_back(calendar.at(0).weight);
+    M.at(0).push_back(calendar.at(0).n);
 
-    M.at(0) = calendar.at(0).weight;
-
-    mComputeOPT(calendar.size() - 1, M, calendar, p);
-
-    return obtainIndex(M, p);
+    return mComputeOPT(calendar.size() - 1, M, calendar, p);
 }
 
 int main(int argc, char *argv[])
@@ -130,9 +127,10 @@ int main(int argc, char *argv[])
 
     // Call the function and filling in the vector
     vector<int> s(topDown(calendar));
+    sort(s.begin()+1, s.end());
 
     // Printing the indexes of each task
-    for (int i = 0; i < s.size(); i++)
+    for (int i = 1; i < s.size(); i++)
     {
         cout << s.at(i) << " ";
     }
