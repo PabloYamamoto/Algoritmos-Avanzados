@@ -29,13 +29,14 @@ int badCharacterRule(map<char, vector<int> > &R, int i, char T)
 {
     if (R.find(T) != R.end())
     {
-        for (size_t k = R[T].size(); k >= 0; k--){
-            if (R[T][k] < i){
+        for (int k = R[T].size() - 1; k >= 0; k--)
+        {
+            if (R[T][k] < i)
+            {
                 return i - R[T][k];
             }
         }
     }
-    cout << "Llegue al final de bad character rule \n";
     return i + 1;
 }
 
@@ -50,8 +51,8 @@ vector<int> booyerMore(string &txt, string &pattern)
     }
 
     int i = pattern.length() - 1; // pattern
-    int j = 0;                // text
-    int s, m;                    // Where we store the max of bad character rule or good suffix rule
+    int j = 0;                    // text
+    int s, m;                     // Where we store the max of bad character rule or good suffix rule
 
     while (j < txt.length() - pattern.length() + 1)
     {
@@ -60,16 +61,16 @@ vector<int> booyerMore(string &txt, string &pattern)
         {
             i--;
         }
-        if (i == 0 && txt[j+i] == pattern[i])
+        if (i == 0 && txt[j] == pattern[i])
         {
             ans.push_back(j);
+            m = pattern.length() - 1;
         }
         else
         {
-            cout << "i: " << i << endl;
-            m = badCharacterRule(Bad, i, txt[j+i]);
-            cout << "m: " << m << endl;
+            m = badCharacterRule(Bad, i, txt[j + i]);
         }
+
         i = pattern.length() - 1;
         j += m;
         // Max(good, bad)
@@ -84,12 +85,13 @@ int main(int argc, char **argv)
     string txt = argv[1];
     string pattern = argv[2];
 
-    cout << "txt: " << txt << endl;
-    cout << "pattern: " << pattern << endl;
+    //cout << "txt: " << txt << endl;
+    //cout << "pattern: " << pattern << endl;
 
     vector<int> a(booyerMore(txt, pattern));
 
-    for (auto num : a){
+    for (auto num : a)
+    {
         cout << num << " ";
     }
     cout << endl;
