@@ -1,3 +1,10 @@
+/*
+Homework 03 - Boyer-Moore Algorithm for Exact String Matching
+
+Santiago Kohn Espinosa - A01029109
+Pablo Yamamoto Magaña - A01022382
+*/
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,7 +20,7 @@ int badCharacterRule(map<char, vector<int> > &R, int i, char T)
         {
             if (R[T][k] < i)
             {
-                return i - R[T][k]; 
+                return i - R[T][k];
             }
         }
     }
@@ -39,7 +46,7 @@ vector<int> booyerMore(string &txt, string &pattern)
 
     int i = size - 1;
     int j = size - 2;
-    
+
     while (j > -1)
     {
         if (pattern[i] == pattern[j])
@@ -53,13 +60,16 @@ vector<int> booyerMore(string &txt, string &pattern)
         }
         else
         {
+            if (i == size - 1)
+            {
+                j--;
+            }
             i = size - 1;
-            j--;
         }
     }
 
     int aux;
-    for (int i = size -1; i >= 0; i--)
+    for (int i = size - 1; i >= 0; i--)
     {
         if (table[i] == -1)
         {
@@ -67,10 +77,10 @@ vector<int> booyerMore(string &txt, string &pattern)
         }
         aux = table[i];
     }
-    
+
     i = size - 1; // pattern
-    j = 0;                    // text
-    int s, m;                 // Where we store the max of bad character rule or good suffix rule
+    j = 0;        // text
+    int s, m;     // Where we store the max of bad character rule or good suffix rule
 
     while (j < txt.length() - size + 1)
     {
