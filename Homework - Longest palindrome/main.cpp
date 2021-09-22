@@ -1,11 +1,28 @@
+/*
+Homework 04 - Longest palindrome algorithm
+
+Santiago Kohn Espinosa - A01029109
+Pablo Yamamoto Magaña - A01022382
+
+ El programa recibe como argumentos una cadena de caracteres que contienen el texto en el cuál debemos encontrar el palíndromo más largo. El programa debe regresar la posición inicial y longitud del palíndromo más largo en la cadena.
+
+Por ejemplo, el programa debe ser ejecutado de la siguiente manera:
+
+>> ./a.out "Was it a cat I saw? Maybe a taco cat?"
+En este texto, aparecen más de un palíndromo, por ejemplo Was it a cat I saw, y taco cat, pero el más largo es el primero, por tanto el programa debe regresar la posición inicial y longitud del primero. 
+
+Para el ejemplo anterior la respuesta debe ser la siguiente:
+
+>> 0 13
+*/
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
 using namespace std;
 
-void adaptInitialInput(string &text)
-{
+void adaptInitialInput(string &text){
     // Add a space between all characters unless current char or previous char is a space itself
     text.insert(0, " ");
     for (int i = 0; i < text.size(); i++) 
@@ -20,8 +37,7 @@ void adaptInitialInput(string &text)
     }
 }
 
-void longestPalindromeSubstring(string &text) 
-{
+void longestPalindromeSubstring(string &text) {
     // Main method for finding the longest palindrome
 
     int n = text.size();
@@ -60,8 +76,8 @@ void longestPalindromeSubstring(string &text)
     cout << (center - palindromeLenghts[center]) / 2 << " " << palindromeLenghts[center] << endl; // Return the initial position and the length of the palindrome
 }
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]){
+
     string text = argv[1];
 
     adaptInitialInput(text);
