@@ -22,22 +22,23 @@ Para el ejemplo anterior la respuesta debe ser la siguiente:
 
 using namespace std;
 
-void adaptInitialInput(string &text){
+void adaptInitialInput(string &text)
+{
     // Add a space between all characters unless current char or previous char is a space itself
     text.insert(0, " ");
-    for (int i = 0; i < text.size(); i++) 
+    for (int i = 0; i < text.size(); i++)
     {
         text[i] = tolower(text[i]);
-
-        if (text[i] != ' ' && text[i+1] != ' ')
+        if (text[i] != ' ' && text[i + 1] != ' ')
         {
-            text.insert(i+1, " ");
+            text.insert(i + 1, " ");
             i++;
         }
     }
 }
 
-void longestPalindromeSubstring(string &text) {
+void longestPalindromeSubstring(string &text)
+{
     // Main method for finding the longest palindrome
 
     int n = text.size();
@@ -76,8 +77,8 @@ void longestPalindromeSubstring(string &text) {
     cout << (center - palindromeLenghts[center]) / 2 << " " << palindromeLenghts[center] << endl; // Return the initial position and the length of the palindrome
 }
 
-int main(int argc, char const *argv[]){
-
+int main(int argc, char const *argv[])
+{
     string text = argv[1];
 
     adaptInitialInput(text);
@@ -86,4 +87,3 @@ int main(int argc, char const *argv[]){
 
     return 0;
 }
-
