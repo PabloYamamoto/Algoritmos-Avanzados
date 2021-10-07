@@ -88,12 +88,10 @@ void kruskal(vector<Edge> edges, int n_edges, int n_nodes)
 int main(int argc, char *argv[])
 {
 
-    int number_of_E;       // Number of Edges
+    int number_of_E = stoi(argv[1]);       // Number of Edges
     set<int> nodes;
     vector<Edge> edges;
-
-    number_of_E = stoi(argv[1]);
-
+    
     for (int i = 0; i < number_of_E; i++)
     {
         Edge a(stoi(argv[i + 2]), stoi(argv[i + number_of_E + 2]), stof(argv[i + 2 * number_of_E + 2]));
