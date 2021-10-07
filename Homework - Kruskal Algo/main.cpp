@@ -18,91 +18,91 @@ The steps for implementing Kruskal's algorithm are as follows:
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <set>
 #include <typeinfo>
+//#include "weightedGraph.h"
 
 using namespace std;
 
-// ----------------------- GRAPH VERTEX WEIGHTED -----------------------
-
-class GraphVertexWeighted
+struct Edge
 {
-private:
-    vector<pair<int, int>> adj;
+    int src;
+    int dest;
+    float weight;
 
-public:
-    ~GraphVertexWeighted(){};
-    GraphVertexWeighted(){};
-
-    vector<pair<int, int>> get_adj() { return adj; };
-    void add_to_adj(int idx, int weight) { adj.push_back(make_pair(idx, weight)); };
+    Edge(int src_, int dest_, float weight_)
+    {
+        src = src_;
+        dest = dest_;
+        weight = weight_;
+    }
 };
 
-// ----------------------- GRAPH WEIGHTED -----------------------
-
-class GraphWeighted
+bool compareWeight(Edge &a, Edge &b)
 {
-private:
-    vector<GraphVertexWeighted> nodes;
-    vector<GraphVertexWeighted> mst; // Minimu Spanning Tree
-    int *parent;
-    int V; // Number of vertices
+    return a.weight < b.weight;
+}
 
-public:
-    GraphWeighted(int V)
+bool isCycle(int src, int dest, vector<int> &union_find)
+{
+    if (union_find[src] != union_find[dest])
     {
-        parent = new int[V];
+        int find = union_find[src];
 
-        for (int i = 0; i < V; i++)
+        for (int j = 0; j < union_find.size(); j++)
         {
-            parent[i] = i;
+            if (union_find[j] == find)
+                union_find[j] = union_find[dest];
         }
+        return true;
     };
+    return false;
+}
 
-    ~GraphWeighted(){};
+void kruskal(vector<Edge> edges, int n_edges, int n_nodes)
+{
+    vector<int> union_find;
+    vector<Edge> ans; 
 
-    void add_edge(int src, int dst, float weight)
+    sort(edges.begin(), edges.end(), compareWeight);
+
+    for (int i = 0; i < n_nodes; i++)
     {
-        nodes[src].add_to_adj(dst, weight);
-        nodes[dst].add_to_adj(src, weight);
-    };
-
-    // --------------------- Find Set ---------------------
-
-    // --------------------- Union Set ---------------------
-
-    // --------------------- Kruskal ---------------------
-
-    void kruskal()
-    {
+        union_find.push_back(i);
     }
 
-    // --------------------- Print mst ---------------------
-};
+    for (int i = 0; i < n_edges; i++)
+    {
+        if (isCycle(edges[i].src, edges[i].dest ,union_find))
+        {
+            ans.push_back(edges[i]);
+        }
+    }
+
+    for (int i = 0; i < ans.size(); i++)
+    {
+        cout << ans[i].src << " " << ans[i].dest << " " << ans[i].weight << endl;
+    }
+}
 
 int main(int argc, char *argv[])
 {
 
-    int number_of_E;     // Number of Edges
-    vector<int> n_src;   // Origin Nodes
-    vector<int> n_dest;  // Destintation Nodes
-    vector<int> weights; // Weights of
+    int number_of_E;       // Number of Edges
+    set<int> nodes;
+    vector<Edge> edges;
 
     number_of_E = stoi(argv[1]);
 
-    for (int i = 2; i < number_of_E + 2; i++)
+    for (int i = 0; i < number_of_E; i++)
     {
-        n_src.push_back(stoi(argv[i]));
+        Edge a(stoi(argv[i + 2]), stoi(argv[i + number_of_E + 2]), stof(argv[i + 2 * number_of_E + 2]));
+        edges.push_back(a);
+        nodes.insert(a.src);
+        nodes.insert(a.dest);
     }
 
-    for (int i = number_of_E + 2; i < ((number_of_E * 2) + 2); i++)
-    {
-        n_dest.push_back(stoi(argv[i]));
-    }
-
-    for (int i = ((number_of_E * 2) + 2); i < ((number_of_E * 3) + 2); i++)
-    {
-        weights.push_back(stoi(argv[i]));
-    }
+    kruskal(edges, number_of_E, nodes.size());
 
     return 0;
 }
