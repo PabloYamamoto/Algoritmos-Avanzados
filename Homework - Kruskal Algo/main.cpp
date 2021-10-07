@@ -20,87 +20,36 @@ The steps for implementing Kruskal's algorithm are as follows:
 #include <vector>
 #include <set>
 #include <typeinfo>
+#include "weghtedGraph.h"
 //#include "weightedGraph.h"
 
 using namespace std;
 
-struct Edge
-{
-    int src;
-    int dest;
-    float weight;
-
-    Edge(int src_, int dest_, float weight_)
-    {
-        src = src_;
-        dest = dest_;
-        weight = weight_;
-    }
-};
-
-bool compareWeight(Edge &a, Edge &b)
-{
-    return a.weight < b.weight;
-}
-
-bool isCycle(int src, int dest, vector<int> &union_find)
-{
-    if (union_find[src] != union_find[dest])
-    {
-        int find = union_find[src];
-
-        for (int j = 0; j < union_find.size(); j++)
-        {
-            if (union_find[j] == find)
-                union_find[j] = union_find[dest];
-        }
-        return true;
-    };
-    return false;
-}
-
-void kruskal(vector<Edge> edges, int n_edges, int n_nodes)
-{
-    vector<int> union_find;
-    vector<Edge> ans; 
-
-    sort(edges.begin(), edges.end(), compareWeight);
-
-    for (int i = 0; i < n_nodes; i++)
-    {
-        union_find.push_back(i);
-    }
-
-    for (int i = 0; i < n_edges; i++)
-    {
-        if (isCycle(edges[i].src, edges[i].dest ,union_find))
-        {
-            ans.push_back(edges[i]);
-        }
-    }
-
-    for (int i = 0; i < ans.size(); i++)
-    {
-        cout << ans[i].src << " " << ans[i].dest << " " << ans[i].weight << endl;
-    }
-}
-
 int main(int argc, char *argv[])
 {
 
-    int number_of_E = stoi(argv[1]);       // Number of Edges
-    set<int> nodes;
-    vector<Edge> edges;
+    int number_of_E = stoi(argv[1]);        // Number of Edges
+    int number_of_N = 0;                    // Number of nodes
+    int src, dst;
+    float weight;
+    GraphWeighted graph;
     
     for (int i = 0; i < number_of_E; i++)
     {
-        Edge a(stoi(argv[i + 2]), stoi(argv[i + number_of_E + 2]), stof(argv[i + 2 * number_of_E + 2]));
-        edges.push_back(a);
-        nodes.insert(a.src);
-        nodes.insert(a.dest);
+        src = stoi(argv[i + 2]);
+        dst = stoi(argv[i + number_of_E + 2]);
+        weight = stof(argv[i + 2 * number_of_E + 2]);
+
+        graph.add_edge(src, dst, weight);
+
+        number_of_N = max(number_of_N, src, dst);
     }
 
-    kruskal(edges, number_of_E, nodes.size());
+    graph.set_nodes(number_of_N);
+
+    graph.kruskal();
+
+    graph.get_mst().print();
 
     return 0;
 }
