@@ -21,19 +21,17 @@ The steps for implementing Kruskal's algorithm are as follows:
 #include <set>
 #include <typeinfo>
 #include "weghtedGraph.h"
-//#include "weightedGraph.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-
-    int number_of_E = stoi(argv[1]);        // Number of Edges
-    int number_of_N = 0;                    // Number of nodes
+    int number_of_E = stoi(argv[1]); // Number of Edges
+    int number_of_N = 0;             // Number of nodes
     int src, dst;
     float weight;
     GraphWeighted graph;
-    
+
     for (int i = 0; i < number_of_E; i++)
     {
         src = stoi(argv[i + 2]);
@@ -42,14 +40,13 @@ int main(int argc, char *argv[])
 
         graph.add_edge(src, dst, weight);
 
-        number_of_N = max(number_of_N, src, dst);
+        number_of_N = max(number_of_N, max(src, dst));
     }
-
-    graph.set_nodes(number_of_N);
+    graph.set_nodes(number_of_N+1);
 
     graph.kruskal();
 
-    graph.get_mst().print();
+    graph.print();
 
     return 0;
 }

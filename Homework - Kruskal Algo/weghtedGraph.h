@@ -1,6 +1,6 @@
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <iostream>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -15,12 +15,13 @@ public:
         src = src_;
         dst = dst_;
         weight = weight_;
-    }
-    ~Edge(){}
 
-    bool operator < (const Edge &a)
+    }
+    ~Edge() {}
+
+    friend bool operator<(const Edge &a, const Edge &b)
     {
-        return a.weight < 0;
+        return a.weight < b.weight;
     }
 };
 
@@ -45,20 +46,20 @@ class GraphWeighted
 {
 private:
     vector<GraphVertexWeighted> nodes;
-    vector<Edge> edges; 
-    GraphWeighted* mst; // Minimu Spanning Tree
-    int *parent;
+    vector<Edge> edges;
+    vector<Edge> mst; // Minimu Spanning Tree
+    vector<int> parent;
     int V; // Number of vertices
 
 public:
-    GraphWeighted(){}
+    GraphWeighted() {}
     GraphWeighted(int V)
     {
-        parent = new int[V];
+        V = V;
 
         for (int i = 0; i < V; i++)
         {
-            parent[i] = i;
+            parent.push_back(i);
         }
     };
 
@@ -66,17 +67,11 @@ public:
     void set_nodes(int V_)
     {
         V = V_;
-        parent = new int[V];
 
         for (int i = 0; i < V; i++)
         {
-            parent[i] = i;
+            parent.push_back(i);
         }
-    }
-
-    GraphWeighted get_mst()
-    {
-        return *mst;
     }
 
     void add_edge(int src, int dst, float weight)
@@ -98,7 +93,7 @@ public:
 
     // --------------------- Union Set ---------------------
 
-    void union_set (int src, int dst)
+    void union_set(int src, int dst)
     {
         parent[src] = parent[dst];
     }
@@ -107,7 +102,8 @@ public:
 
     void kruskal()
     {
-        sort(edges.begin(), edges.end());
+        stable_sort(edges.begin(), edges.end());
+        
         int srcParent, dstParent;
         for (int i = 0; i < edges.size(); i++)
         {
@@ -116,7 +112,7 @@ public:
 
             if (srcParent != dstParent)
             {
-                mst->edges.push_back(edges[i]);
+                mst.push_back(edges[i]);
                 union_set(srcParent, dstParent);
             }
         }
@@ -126,9 +122,10 @@ public:
 
     void print()
     {
-        for (int i = 0; i < nodes.size(); i++)
+        for (int i = 0; i < mst.size(); i++)
         {
-            cout << edges[i].src << " " << edges[i].dst << " " << edges[i].weight << endl;
+            cout << mst[i].src << " " << mst[i].dst << " " << mst[i].weight << endl;
         }
+        cout << endl;
     }
 };
