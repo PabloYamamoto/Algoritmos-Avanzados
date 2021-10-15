@@ -1,6 +1,6 @@
 /*
 
-Santiago Kohn - A01
+Santiago Kohn - A0129109
 Pablo Yamamoto Magaña - A01022382
 
 Kruskas algortihms
@@ -13,6 +13,12 @@ The steps for implementing Kruskal's algorithm are as follows:
     2.- Take the edge with the lowest weight and add it to the spanning tree. If adding the edge created a cycle, then reject this edge.
     3.- Keep adding edges until we reach all vertices. -> Repear steps 1 and 2 V-1
 
+Input: 
+
+    1. number of edges. INT
+    2. N source of the edges. INT
+    3. N destination of the edges. INT
+    4. N weight of the edges. INT
 */
 
 #include <iostream>
