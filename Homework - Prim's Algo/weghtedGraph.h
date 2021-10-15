@@ -11,6 +11,8 @@ public:
     int src, dst;
     float weight;
 
+    Edge() {}
+
     Edge(int src_, int dst_, float weight_)
     {
         src = src_;
@@ -38,14 +40,14 @@ struct compareByWeight
 class GraphVertexWeighted
 {
 private:
-    vector<pair<int, float>> adj;
+    vector<Edge> adj;
 
 public:
     ~GraphVertexWeighted(){};
     GraphVertexWeighted(){};
 
-    vector<pair<int, float>> get_adj() { return adj; };
-    void add_to_adj(int idx, float weight) { adj.push_back(make_pair(idx, weight)); };
+    vector<Edge> get_adj() { return adj; };
+    void add_to_adj(Edge edge) { adj.push_back(edge); };
 };
 
 // ----------------------- GRAPH WEIGHTED -----------------------
@@ -93,8 +95,8 @@ public:
         Edge aux(src, dst, weight);
         edges.push_back(aux);
 
-        nodes[src].add_to_adj(dst, weight);
-        nodes[dst].add_to_adj(src, weight);
+        nodes[src].add_to_adj(aux);
+        nodes[dst].add_to_adj(aux);
     };
 
     // --------------------- Find Set ---------------------
@@ -137,38 +139,45 @@ public:
 
     void Prim(int startNode)
     {
-        vector<bool> reached(nodes.size(), false);
-        priority_queue<Edge, vector<Edge>, compareByWeight> pQueue; // priority queue for de edges.
+        vector<bool> reached(nodes.size(), 0);
 
-        int actualNode = startNode;
+        vector<Edge> edges(nodes[startNode].get_adj());
+
+        // priority queue for de edges with the first adjacency edges.
+        priority_queue<Edge, vector<Edge>, compareByWeight> pQueue(edges.begin(), edges.end());
+        reached[startNode] = true;
+        int actualNode;
+        Edge lastEdge;
 
         for (int i = 0; i < nodes.size() - 1; i++)
         {
+            // pass all the adjacency that we have already reached.
+            do
+            {
+                lastEdge = pQueue.top();
+                pQueue.pop();
+            } while (reached[lastEdge.src] && reached[lastEdge.dst]);
+
+            mst.push_back(lastEdge);
+
+            if (reached[lastEdge.src])
+                actualNode = lastEdge.dst;
+            else
+                actualNode = lastEdge.src;
+
             reached[actualNode] = true;
 
             // adjacency of actual node.
-            vector<pair<int, float>> edges(nodes[actualNode].get_adj()); 
+            vector<Edge> edges(nodes[actualNode].get_adj());
 
             // Push to priority queue all the adjacency.
             for (int j = 0; j < edges.size(); j++)
             {
-                pQueue.push(Edge(actualNode, edges[j].first, edges[j].second));
+                pQueue.push(edges[j]);
             }
-
-            Edge next = pQueue.top();
-
-            // pass al the adjacency that we have already reached.
-            while (reached[next.dst])
-            {
-                pQueue.pop();
-                next = pQueue.top();
-            }
-
-            mst.push_back(next);
-            actualNode = next.dst;
         }
 
-        sort(mst.begin(), mst.end());
+        stable_sort(mst.begin(), mst.end());
     }
 
     void printMST()
